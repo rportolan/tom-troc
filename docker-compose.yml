@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  app:
+    build: ./docker/php
+    container_name: book_app
+    ports:
+      - "8080:80"        # http://localhost:8080
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: book_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: book_app
+      MYSQL_USER: book_user
+      MYSQL_PASSWORD: book_pass
+    ports:
+      - "3307:3306"      # MySQL accessible sur 3307 depuis ta machine
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: book_phpmyadmin
+    restart: always
+    ports:
+      - "8081:80"        # http://localhost:8081
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      - db
+
+volumes:
+  db_data:
