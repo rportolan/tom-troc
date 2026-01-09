@@ -13,7 +13,6 @@ if (!in_array($page, $publicPages, true) && empty($_SESSION['user'])) {
     exit;
 }
 
-
 // Mini loader .env (junior)
 $envPath = __DIR__ . '/../src/config/.env';
 if (file_exists($envPath)) {
@@ -129,8 +128,17 @@ switch ($page) {
         break;
 
     case 'home':
-    default:
         $controller = new HomeController($pdo);
         $controller->index();
         break;
+    default:
+    http_response_code(404);
+    $title = "Page introuvable";
+
+    ob_start();
+    require __DIR__ . '/../src/views/404.php';
+    $content = ob_get_clean();
+
+    require __DIR__ . '/../src/views/layout.php';
+    break;
 }
