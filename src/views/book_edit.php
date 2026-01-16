@@ -16,7 +16,6 @@
       <input type="hidden" name="id" value="<?= (int)$book['id'] ?>">
 
       <div class="bookedit-grid">
-        <!-- Gauche : photo -->
         <div class="bookedit-photo">
   <div class="bookedit-photo__label">Photo</div>
 

@@ -1,7 +1,5 @@
 <section class="container messaging">
   <div class="messaging-grid">
-
-    <!-- Colonne gauche -->
     <aside class="messaging-left">
       <div class="messaging-left__head">
         <h1 class="messaging-left__title">Messagerie</h1>
@@ -50,10 +48,8 @@
       </div>
     </aside>
 
-    <!-- Colonne droite -->
     <div class="messaging-right">
       <?php
-        // $currentMeta est défini dans le controller quand une conv est ouverte
         $chatName = $current ?? '—';
         $chatAvatar = $currentMeta['avatar'] ?? '/images/test.png';
       ?>
@@ -93,7 +89,6 @@
           <button class="btn btn--primary chat-input__btn" type="submit">Envoyer</button>
         </form>
       <?php else: ?>
-        <!-- pas de form si aucune conversation ouverte -->
       <?php endif; ?>
     </div>
 

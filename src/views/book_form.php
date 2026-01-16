@@ -18,7 +18,6 @@
       <input type="hidden" name="id" value="<?= (int)($book['id'] ?? 0) ?>">
 
       <div class="book-edit-grid">
-        <!-- gauche -->
         <div class="book-edit-left">
           <div class="book-edit-photoLabel">Photo</div>
           <div class="book-edit-photo">
@@ -32,8 +31,6 @@
 
           <div class="hint">jpg / png / webp (2 Mo max). Laisse vide pour garder l'image.</div>
         </div>
-
-        <!-- droite -->
         <div class="book-edit-right">
           <div class="field">
             <label>Titre</label>
@@ -77,7 +74,6 @@
       const file = input.files && input.files[0];
       if (!file) return;
 
-      // sécurité : uniquement images
       if (!file.type.startsWith("image/")) return;
 
       if (lastUrl) URL.revokeObjectURL(lastUrl);
@@ -85,7 +81,6 @@
       preview.src = lastUrl;
     });
 
-    // clean si on quitte la page
     window.addEventListener("beforeunload", () => {
       if (lastUrl) URL.revokeObjectURL(lastUrl);
     });

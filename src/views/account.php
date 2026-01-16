@@ -9,7 +9,6 @@
   <?php endif; ?>
 
   <div class="account-top">
-    <!-- Carte profil (gauche) -->
     <div class="card account-profile">
       <div class="account-profile__avatarWrap">
         <img class="account-profile__avatar" src="/images/test.png" alt="avatar">
@@ -27,7 +26,6 @@
       </div>
     </div>
 
-    <!-- Infos (droite) -->
     <div class="card account-infos">
       <div class="account-infos__title">Vos informations personnelles</div>
 
@@ -53,7 +51,6 @@
     </div>
   </div>
 
-  <!-- Table livres -->
    <div class="account-actions">
       <a class="btn btn--primary" href="/?page=book_create">+ Ajouter un livre</a>
     </div>
@@ -83,8 +80,6 @@
                 <?php
                   $img = $b['image'] ?? 'test.png';
                   if ($img === '') $img = 'test.png';
-                  // si tu stockes déjà "test.png" sans sous-dossier, ok.
-                  // si tu uploades dans books/, on mettra le chemin ci-dessous.
                   $src = str_starts_with($img, 'books/') ? '/images/' . $img : '/images/' . $img;
                 ?>
                 <img class="table-img" src="<?= htmlspecialchars($src) ?>" alt="couverture">
@@ -115,7 +110,6 @@
       </tbody>
     </table>
   </div>
-  <!-- Modal livre -->
 <div class="modal" id="bookModal" hidden>
   <div class="modal__overlay" data-close="1"></div>
 
@@ -172,7 +166,6 @@
 
     modal.hidden = false;
 
-    // champs
     const titleEl = document.getElementById('modalTitle');
     const idEl = document.getElementById('book_id');
     const tEl = document.getElementById('book_title');
@@ -196,7 +189,6 @@
       avEl.value = '1';
     }
 
-    // focus UX
     setTimeout(() => tEl.focus(), 0);
   }
 
@@ -206,7 +198,6 @@
     modal.hidden = true;
   }
 
-  // fermetures (overlay + bouton)
   document.addEventListener('click', (e) => {
     if (e.target && e.target.dataset && e.target.dataset.close === '1') {
       closeBookModal();
@@ -218,7 +209,6 @@
     if (closeBtn) closeBtn.addEventListener('click', closeBookModal);
   });
 
-  // ESC
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeBookModal();
   });

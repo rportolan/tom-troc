@@ -7,7 +7,6 @@
   ?>
 
   <div class="account-top">
-    <!-- Carte profil (gauche) -->
     <div class="card account-profile">
       <div class="account-profile__avatarWrap">
         <img class="account-profile__avatar" src="<?= htmlspecialchars($avatar) ?>" alt="avatar">
@@ -31,8 +30,6 @@
         <div class="hint" style="margin-top:18px;">C’est votre profil.</div>
       <?php endif; ?>
     </div>
-
-    <!-- Table livres (droite) -->
     <div class="card account-tableWrap" style="flex:1;">
       <table class="account-table">
         <thead>

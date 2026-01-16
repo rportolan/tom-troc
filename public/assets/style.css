@@ -2,7 +2,8 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
-/* ===== Reset simple ===== */
+/* ===== Reset ===== */
+
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 img { max-width: 100%; display: block; }
@@ -37,6 +38,7 @@ body{
 .page{ min-height: 100vh; }
 
 /* ===== Typo ===== */
+
 .title-xl{
   font-family: "Georgia", "Times New Roman", serif;
   font-size: 48px;
@@ -66,6 +68,7 @@ body{
 .mt-24{ margin-top: 24px; }
 
 /* ===== Header ===== */
+
 .header{
   background: var(--bg);
   padding: 18px 0;
@@ -119,8 +122,8 @@ body{
   margin-left: 6px;
 }
 
-
 /* ===== Footer ===== */
+
 footer{
   background-color: rgb(255, 255, 255);
   padding: 10px;
@@ -134,9 +137,8 @@ footer{
 
 }
 
-
-
 /* ===== Buttons ===== */
+
 .btn{
   display: inline-flex;
   align-items: center;
@@ -164,6 +166,7 @@ footer{
 }
 
 /* ===== Hero ===== */
+
 .hero{
   padding: 30px 0 10px;
   display: grid;
@@ -184,6 +187,7 @@ footer{
 }
 
 /* ===== Sections ===== */
+
 .section{ 
   padding: 70px 0; 
 }
@@ -195,6 +199,7 @@ footer{
 }
 
 /* Latest books cards */
+
 .books-grids{
   margin-top: 26px;
   display: grid;
@@ -240,6 +245,7 @@ footer{
 .book-card__seller span{ color: #9a9a9a; font-style: italic; }
 
 /* Steps */
+
 .steps{
   margin-top: 22px;
   display: grid;
@@ -261,6 +267,7 @@ footer{
 }
 
 /* Values */
+
 .values{ padding: 0; }
 .values__bg img{
   width: 100%;
@@ -290,7 +297,6 @@ footer{
   text-align: right;
 }
 
-/* ===== Responsive (light) ===== */
 @media (max-width: 980px){
   .hero{ grid-template-columns: 1fr; }
   .books-grid{ grid-template-columns: repeat(2, 1fr); }
@@ -305,6 +311,7 @@ footer{
 }
 
 /* ===== Page: Nos livres à l'échange ===== */
+
 .books-page{
   padding: 40px 0 80px;
 }
@@ -345,13 +352,15 @@ footer{
   color: #b0b0b0;
 }
 
-/* grid page (plus espacé, comme la maquette) */
+/* grid page */
+
 .books-grid--page{
   grid-template-columns: repeat(4, 1fr);
   gap: 26px;
 }
 
 /* badge "non dispo." sur image */
+
 .book-card__media{
   position: relative;
 }
@@ -367,7 +376,6 @@ footer{
   border-radius: 999px;
 }
 
-/* responsive */
 @media (max-width: 980px){
   .books-head{ flex-direction: column; }
   .books-search__input{ width: 100%; max-width: 420px; }
@@ -378,6 +386,7 @@ footer{
 }
 
 /* ===== Single livre ===== */
+
 .single{
   padding: 18px 0 80px;
 }
@@ -476,10 +485,8 @@ footer{
   font-size: 15px;
 }
 
-/* lien autour des cartes */
 .book-link{ display: block; }
 
-/* responsive */
 @media (max-width: 980px){
   .single-grid{ grid-template-columns: 1fr; }
   .single-image img{ height: 420px; }
@@ -487,6 +494,7 @@ footer{
 }
 
 /* ===== Messagerie ===== */
+
 .messaging{
   padding: 24px 0 80px;
 }
@@ -498,7 +506,6 @@ footer{
   align-items: start;
 }
 
-/* Colonne gauche */
 .messaging-left{
   background: rgba(255,255,255,.55);
   border-radius: 6px;
@@ -564,7 +571,6 @@ footer{
   color: #b0b0b0;
 }
 
-/* Colonne droite */
 .messaging-right{
   min-height: 640px;
   display: flex;
@@ -624,7 +630,7 @@ footer{
 }
 
 .msg-bubble--right{
-  background: #dfeef6; /* bleu clair maquette */
+  background: #dfeef6;
   color: #2c2c2c;
 }
 .msg-bubble--left{
@@ -632,7 +638,6 @@ footer{
   color: #2c2c2c;
 }
 
-/* Input bas */
 .chat-input{
   display: grid;
   grid-template-columns: 1fr 160px;
@@ -656,13 +661,13 @@ footer{
   border-radius: 10px;
 }
 
-/* Responsive */
 @media (max-width: 980px){
   .messaging-grid{ grid-template-columns: 1fr; }
   .messaging-left{ min-height: auto; }
 }
 
 /* ===== Auth (Connexion/Inscription) ===== */
+
 .auth{
   padding: 28px 0 90px;
 
@@ -748,13 +753,13 @@ footer{
   object-fit: cover;
 }
 
-/* responsive */
 @media (max-width: 980px){
   .auth__grid{ grid-template-columns: 1fr; }
   .auth__imageWrap img{ height: 320px; }
 }
 
 /* ===== Mon compte (maquette) ===== */
+
 .account-page{
   padding: 30px 0 80px;
 }
@@ -767,7 +772,6 @@ footer{
   margin-bottom: 20px;
 }
 
-/* petites alertes */
 .flash{
   border-radius: 10px;
   padding: 12px 14px;
@@ -791,7 +795,6 @@ footer{
   margin-bottom: 22px;
 }
 
-/* Profil gauche */
 .account-profile{
   padding: 44px 40px;
   text-align: center;
@@ -841,7 +844,6 @@ footer{
   color: #4a4a4a;
 }
 
-/* Infos droite */
 .account-infos{
   padding: 34px 36px;
 }
@@ -878,7 +880,6 @@ footer{
   margin-top: 6px;
 }
 
-/* Bouton outline comme maquette */
 .btn-outline{
   align-self: flex-start;
   margin-top: 6px;
@@ -895,7 +896,6 @@ footer{
   background: rgba(11,143,77,.08);
 }
 
-/* Table */
 .account-tableWrap{
   padding: 0;
   overflow: hidden;
@@ -920,7 +920,7 @@ footer{
   vertical-align: middle;
 }
 .account-table tbody tr:nth-child(even){
-  background: rgba(213,224,233,.55); /* bleu/gris clair comme la maquette */
+  background: rgba(213,224,233,.55); 
 }
 .table-img{
   width: 56px;
@@ -939,7 +939,6 @@ footer{
   padding: 26px 18px;
 }
 
-/* Pills */
 .pill{
   display: inline-block;
   padding: 4px 12px;
@@ -957,7 +956,6 @@ footer{
   border: 1px solid rgba(153,46,46,.20);
 }
 
-/* Actions */
 .link-edit{
   color: #2e2e2e;
   text-decoration: underline;
@@ -968,13 +966,13 @@ footer{
   text-decoration: underline;
 }
 
-/* Responsive */
 @media (max-width: 980px){
   .account-top{ grid-template-columns: 1fr; }
   .table-desc{ max-width: none; }
 }
 
 /* ===== Edition livre ===== */
+
 .bookedit-page{
   padding: 30px 0 80px;
 }
@@ -1007,7 +1005,6 @@ footer{
   align-items: start;
 }
 
-/* Photo */
 .bookedit-photo__label{
   font-size: 11px;
   color: #9a9a9a;
@@ -1030,7 +1027,6 @@ footer{
   text-decoration: underline;
 }
 
-/* Champs */
 .bookedit-fields{
   padding-top: 6px;
   display: flex;
@@ -1083,8 +1079,6 @@ footer{
   filter: brightness(0.95);
 }
 
-
-
 /* modal */
 .modal[hidden] { display: none !important; }
 
@@ -1117,7 +1111,6 @@ footer{
   margin-top: 16px;
 }
 
-/* bouton "éditer" en style lien */
 .link-edit {
   background: none;
   border: none;
@@ -1127,13 +1120,6 @@ footer{
   font: inherit;
 }
 
-
-/* =========================================================
-   PATCH : book_form.php (book-edit-*) -> même style maquette
-   Objectif : aligner visuellement book_form et book_edit
-   ========================================================= */
-
-/* Container + titre (équivalent bookedit-page / bookedit-title) */
 .book-edit-page{
   padding: 30px 0 80px;
 }
@@ -1152,7 +1138,6 @@ footer{
   margin: 0 0 18px;
 }
 
-/* Card (équivalent bookedit-card) */
 .book-edit-card{
   background: rgba(255,255,255,.75);
   border-radius: 14px;
@@ -1160,7 +1145,6 @@ footer{
   padding: 28px;
 }
 
-/* Grid (équivalent bookedit-grid) */
 .book-edit-grid{
   display: grid;
   grid-template-columns: 420px 1fr;
@@ -1168,7 +1152,6 @@ footer{
   align-items: start;
 }
 
-/* Colonne gauche */
 .book-edit-left .book-edit-photoLabel{
   font-size: 11px;
   color: #9a9a9a;
@@ -1183,7 +1166,6 @@ footer{
   display: block;
 }
 
-/* Bouton upload “Modifier la photo” */
 .book-edit-file{
   display: inline-flex;
   align-items: center;
@@ -1204,7 +1186,6 @@ footer{
   background: rgba(11,143,77,.08);
 }
 
-/* Colonne droite */
 .book-edit-right{
   padding-top: 6px;
   display: flex;
@@ -1212,7 +1193,7 @@ footer{
   gap: 18px;
 }
 
-/* Champs : on force un style identique à bookedit (sans dépendre de .input/.textarea/.select) */
+
 .book-edit-page .field label{
   display: block;
   font-size: 11px;
@@ -1242,7 +1223,6 @@ footer{
   line-height: 1.4;
 }
 
-/* Bouton valider : même style que la maquette (équivalent btn-primary-wide / btn--wide) */
 .book-edit-page .btn--wide{
   width: 100%;
   height: 56px;
@@ -1250,7 +1230,6 @@ footer{
   font-size: 15px;
 }
 
-/* Responsive : comme bookedit-grid */
 @media (max-width: 980px){
   .book-edit-grid{
     grid-template-columns: 1fr;
@@ -1260,12 +1239,6 @@ footer{
   }
 }
 
-
-
-
-
-
-/* responsive */
 @media (max-width: 980px){
   .bookedit-grid{
     grid-template-columns: 1fr;
