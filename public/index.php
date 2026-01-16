@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 session_start();
 
@@ -7,138 +8,121 @@ $page = $_GET['page'] ?? 'home';
 // Pages publiques
 $publicPages = ['home', 'login', 'login_post', 'register', 'register_post'];
 
-// Si page privée et pas connecté => redirection login
 if (!in_array($page, $publicPages, true) && empty($_SESSION['user'])) {
     header('Location: /?page=login');
     exit;
 }
 
-// Mini loader .env (junior)
-$envPath = __DIR__ . '/../src/config/.env';
-if (file_exists($envPath)) {
-    $lines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($lines as $line) {
-        $line = trim($line);
-        if ($line === '' || str_starts_with($line, '#')) continue;
-        [$k, $v] = array_pad(explode('=', $line, 2), 2, '');
-        $_ENV[trim($k)] = trim($v, "\"' ");
-    }
-}
+// Env + DB
+require_once __DIR__ . '/../src/core/Env.php';
+Env::load(__DIR__ . '/../src/config/.env');
 
 require_once __DIR__ . '/../src/config/pdo.php';
+
+// Core
+require_once __DIR__ . '/../src/core/Auth.php';
+
+// Entities
+require_once __DIR__ . '/../src/models/entities/User.php';
+require_once __DIR__ . '/../src/models/entities/Book.php';
+require_once __DIR__ . '/../src/models/entities/Conversation.php';
+require_once __DIR__ . '/../src/models/entities/Message.php';
+
+// Repositories
+require_once __DIR__ . '/../src/models/repositories/UserRepository.php';
+require_once __DIR__ . '/../src/models/repositories/BookRepository.php';
+require_once __DIR__ . '/../src/models/repositories/ConversationRepository.php';
+require_once __DIR__ . '/../src/models/repositories/MessageRepository.php';
+
+// Controllers
 require_once __DIR__ . '/../src/controllers/HomeController.php';
 require_once __DIR__ . '/../src/controllers/BookController.php';
 require_once __DIR__ . '/../src/controllers/MessageController.php';
 require_once __DIR__ . '/../src/controllers/AuthController.php';
+require_once __DIR__ . '/../src/controllers/AccountController.php';
+require_once __DIR__ . '/../src/controllers/ProfileController.php';
+
+// DI simple
+$usersRepo = new UserRepository($pdo);
+$booksRepo = new BookRepository($pdo);
+$conversationsRepo = new ConversationRepository($pdo);
+$messagesRepo = new MessageRepository($pdo);
 
 switch ($page) {
+    case 'home':
+        (new HomeController($booksRepo))->index();
+        break;
+
     case 'books':
-        $controller = new BookController($pdo);
-        $controller->index();
+        (new BookController($booksRepo))->index();
         break;
 
     case 'book':
-        $controller = new BookController($pdo);
-        $controller->show();
+        (new BookController($booksRepo))->show();
         break;
 
-    case 'messages':
-        $controller = new MessageController($pdo);
-        $controller->index();
-        break;
-
-    case 'login':
-        $controller = new AuthController($pdo);
-        $controller->loginForm();
-        break;
-
-    case 'login_post':
-        $controller = new AuthController($pdo);
-        $controller->login();
-        break;
-
-    case 'register':
-        require_once __DIR__ . '/../src/controllers/AuthController.php';
-        $controller = new AuthController($pdo);
-        $controller->registerForm();
-        break;
-
-    case 'register_post':
-        require_once __DIR__ . '/../src/controllers/AuthController.php';
-        $controller = new AuthController($pdo);
-        $controller->register();
-        break;
-    
-    case 'logout':
-        $controller = new AuthController($pdo);
-        $controller->logout();
-        break;
-
-    case 'account':
-        require_once __DIR__ . '/../src/controllers/AccountController.php';
-        $controller = new AccountController($pdo);
-        $controller->index();
-        break;
-
-    case 'account_update':
-        require_once __DIR__ . '/../src/controllers/AccountController.php';
-        $controller = new AccountController($pdo);
-        $controller->update();
-        break;
-
-    case 'book_delete':
-        require_once __DIR__ . '/../src/controllers/BookController.php';
-        $controller = new BookController($pdo);
-        $controller->delete();
-        break;
-    
     case 'book_create':
-        require_once __DIR__ . '/../src/controllers/BookController.php';
-        $controller = new BookController($pdo);
-        $controller->create();
+        (new BookController($booksRepo))->create();
         break;
-
 
     case 'book_edit':
-        require_once __DIR__ . '/../src/controllers/BookController.php';
-        $controller = new BookController($pdo);
-        $controller->edit();
+        (new BookController($booksRepo))->edit();
         break;
 
     case 'book_save':
-        require_once __DIR__ . '/../src/controllers/BookController.php';
-        $controller = new BookController($pdo);
-        $controller->save();
+        (new BookController($booksRepo))->save();
         break;
 
-    case 'profile':
-        require_once __DIR__ . '/../src/controllers/ProfileController.php';
-        $controller = new ProfileController($pdo);
-        $controller->show();
+    case 'book_delete':
+        (new BookController($booksRepo))->delete();
         break;
 
     case 'messages':
-    $controller = new MessageController($pdo);
-    $controller->index();
-    break;
+        (new MessageController($usersRepo, $conversationsRepo, $messagesRepo))->index();
+        break;
 
     case 'message_send':
-        $controller = new MessageController($pdo);
-        $controller->send();
+        (new MessageController($usersRepo, $conversationsRepo, $messagesRepo))->send();
         break;
 
-    case 'home':
-        $controller = new HomeController($pdo);
-        $controller->index();
+    case 'login':
+        (new AuthController($usersRepo))->loginForm();
         break;
+
+    case 'login_post':
+        (new AuthController($usersRepo))->login();
+        break;
+
+    case 'register':
+        (new AuthController($usersRepo))->registerForm();
+        break;
+
+    case 'register_post':
+        (new AuthController($usersRepo))->register();
+        break;
+
+    case 'logout':
+        (new AuthController($usersRepo))->logout();
+        break;
+
+    case 'account':
+        (new AccountController($usersRepo, $booksRepo))->index();
+        break;
+
+    case 'account_update':
+        (new AccountController($usersRepo, $booksRepo))->update();
+        break;
+
+    case 'profile':
+        (new ProfileController($usersRepo, $booksRepo))->show();
+        break;
+
     default:
-    http_response_code(404);
-    $title = "Page introuvable";
-
-    ob_start();
-    require __DIR__ . '/../src/views/404.php';
-    $content = ob_get_clean();
-
-    require __DIR__ . '/../src/views/layout.php';
-    break;
+        http_response_code(404);
+        $title = "Page introuvable";
+        ob_start();
+        require __DIR__ . '/../src/views/404.php';
+        $content = ob_get_clean();
+        require __DIR__ . '/../src/views/layout.php';
+        break;
 }

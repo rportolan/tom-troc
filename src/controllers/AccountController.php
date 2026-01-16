@@ -1,26 +1,13 @@
 <?php
+declare(strict_types=1);
 
-class AccountController
+final class AccountController
 {
-    private PDO $pdo;
-
-    public function __construct(PDO $pdo)
-    {
-        $this->pdo = $pdo;
-    }
-
-    private function requireLogin()
-    {
-        if (empty($_SESSION['user'])) {
-            header('Location: /?page=login&error=Veuillez vous connecter');
-            exit;
-        }
-    }
+    public function __construct(private UserRepository $users, private BookRepository $books) {}
 
     private function memberSinceLabel(?string $createdAt): string
     {
         if (!$createdAt) return 'Membre depuis -';
-
         $start = new DateTime($createdAt);
         $now = new DateTime();
         $diff = $start->diff($now);
@@ -32,96 +19,71 @@ class AccountController
         return 'Membre depuis moins d’un mois';
     }
 
-    public function index()
+    public function index(): void
     {
-        $this->requireLogin();
+        Auth::requireLogin();
 
         $title = "Mon compte";
-        $userId = (int)$_SESSION['user']['id'];
+        $userId = Auth::userId();
 
-        $stmt = $this->pdo->prepare("SELECT id, pseudo, email, avatar, created_at FROM users WHERE id = :id");
-        $stmt->execute([':id' => $userId]);
-        $user = $stmt->fetch();
+        $user = $this->users->findById($userId);
+        if (!$user) {
+            header('Location: /?page=logout'); exit;
+        }
 
-        $memberSince = $this->memberSinceLabel($user['created_at'] ?? null);
-
-        $stmt = $this->pdo->prepare("
-            SELECT id, title, author, description, image, is_available
-            FROM books
-            WHERE user_id = :uid
-            ORDER BY id DESC
-        ");
-        $stmt->execute([':uid' => $userId]);
-        $books = $stmt->fetchAll();
+        $memberSince = $this->memberSinceLabel($user->createdAt());
+        $books = array_map(fn(Book $b) => $b->toArrayForViews(), $this->books->listByUserId($userId));
 
         $success = $_GET['success'] ?? '';
         $error = $_GET['error'] ?? '';
 
+        // Pour garder ta vue telle quelle : on expose un array $user comme avant
+        $user = [
+            'id' => $user->id(),
+            'pseudo' => $user->pseudo(),
+            'email' => $user->email(),
+            'avatar' => $user->avatar(),
+            'created_at' => $user->createdAt(),
+        ];
+
         ob_start();
         require __DIR__ . '/../views/account.php';
         $content = ob_get_clean();
-
         require __DIR__ . '/../views/layout.php';
     }
 
-    public function update()
+    public function update(): void
     {
-        $this->requireLogin();
-
-        $userId = (int)$_SESSION['user']['id'];
+        Auth::requireLogin();
+        $userId = Auth::userId();
 
         $email = trim($_POST['email'] ?? '');
         $pseudo = trim($_POST['pseudo'] ?? '');
         $password = trim($_POST['password'] ?? '');
 
         if ($email === '' || $pseudo === '') {
-            header('Location: /?page=account&error=Email et pseudo obligatoires');
-            exit;
+            header('Location: /?page=account&error=Email et pseudo obligatoires'); exit;
         }
-
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            header('Location: /?page=account&error=Email invalide');
-            exit;
+            header('Location: /?page=account&error=Email invalide'); exit;
+        }
+        if ($this->users->existsEmailOrPseudoExceptId($email, $pseudo, $userId)) {
+            header('Location: /?page=account&error=Email ou pseudo déjà utilisé'); exit;
         }
 
-        // Vérifie unicité email/pseudo (sauf moi)
-        $stmt = $this->pdo->prepare("
-            SELECT id FROM users
-            WHERE (email = :email OR pseudo = :pseudo) AND id != :id
-            LIMIT 1
-        ");
-        $stmt->execute([':email' => $email, ':pseudo' => $pseudo, ':id' => $userId]);
-        if ($stmt->fetch()) {
-            header('Location: /?page=account&error=Email ou pseudo déjà utilisé');
-            exit;
-        }
-
-        // Update
+        $hash = null;
         if ($password !== '') {
             if (strlen($password) < 6) {
-                header('Location: /?page=account&error=Mot de passe trop court (6 caractères minimum)');
-                exit;
+                header('Location: /?page=account&error=Mot de passe trop court (6 caractères minimum)'); exit;
             }
-
             $hash = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $this->pdo->prepare("
-                UPDATE users SET email = :email, pseudo = :pseudo, password = :pass
-                WHERE id = :id
-            ");
-            $stmt->execute([':email' => $email, ':pseudo' => $pseudo, ':pass' => $hash, ':id' => $userId]);
-        } else {
-            $stmt = $this->pdo->prepare("
-                UPDATE users SET email = :email, pseudo = :pseudo
-                WHERE id = :id
-            ");
-            $stmt->execute([':email' => $email, ':pseudo' => $pseudo, ':id' => $userId]);
         }
 
-        // Met à jour la session
+        $this->users->updateAccount($userId, $email, $pseudo, $hash);
+
         $_SESSION['user']['email'] = $email;
         $_SESSION['user']['pseudo'] = $pseudo;
 
-        header('Location: /?page=account&success=Informations enregistrées');
-        exit;
+        header('Location: /?page=account&success=Informations enregistrées'); exit;
     }
 }

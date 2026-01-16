@@ -1,26 +1,13 @@
 <?php
+declare(strict_types=1);
 
-class ProfileController
+final class ProfileController
 {
-    private PDO $pdo;
-
-    public function __construct(PDO $pdo)
-    {
-        $this->pdo = $pdo;
-    }
-
-    private function requireLogin()
-    {
-        if (empty($_SESSION['user'])) {
-            header('Location: /?page=login&error=Veuillez vous connecter');
-            exit;
-        }
-    }
+    public function __construct(private UserRepository $users, private BookRepository $books) {}
 
     private function memberSinceLabel(?string $createdAt): string
     {
         if (!$createdAt) return 'Membre depuis -';
-
         $start = new DateTime($createdAt);
         $now = new DateTime();
         $diff = $start->diff($now);
@@ -32,44 +19,35 @@ class ProfileController
         return 'Membre depuis moins d’un mois';
     }
 
-    public function show()
+    public function show(): void
     {
-        $this->requireLogin();
+        Auth::requireLogin();
 
         $title = "Profil";
         $userId = (int)($_GET['id'] ?? 0);
 
         if ($userId <= 0) {
-            header('Location: /?page=books&error=Profil introuvable');
-            exit;
+            header('Location: /?page=books&error=Profil introuvable'); exit;
         }
 
-        // Récupère user
-        $stmt = $this->pdo->prepare("SELECT id, pseudo, avatar, created_at FROM users WHERE id = :id LIMIT 1");
-        $stmt->execute([':id' => $userId]);
-        $user = $stmt->fetch();
-
-        if (!$user) {
-            header('Location: /?page=books&error=Profil introuvable');
-            exit;
+        $u = $this->users->findById($userId);
+        if (!$u) {
+            header('Location: /?page=books&error=Profil introuvable'); exit;
         }
 
-        // Livres du user (tous, même non dispo — tu peux filtrer si tu veux)
-        $stmt = $this->pdo->prepare("
-            SELECT id, title, author, description, image, is_available
-            FROM books
-            WHERE user_id = :uid
-            ORDER BY id DESC
-        ");
-        $stmt->execute([':uid' => $userId]);
-        $books = $stmt->fetchAll();
+        $memberSince = $this->memberSinceLabel($u->createdAt());
+        $books = array_map(fn(Book $b) => $b->toArrayForViews(), $this->books->listByUserId($userId));
 
-        $memberSince = $this->memberSinceLabel($user['created_at'] ?? null);
+        $user = [
+            'id' => $u->id(),
+            'pseudo' => $u->pseudo(),
+            'avatar' => $u->avatar(),
+            'created_at' => $u->createdAt(),
+        ];
 
         ob_start();
         require __DIR__ . '/../views/profile.php';
         $content = ob_get_clean();
-
         require __DIR__ . '/../views/layout.php';
     }
 }
