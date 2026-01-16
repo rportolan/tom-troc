@@ -37,7 +37,6 @@ final class AccountController
         $success = $_GET['success'] ?? '';
         $error = $_GET['error'] ?? '';
 
-        // Pour garder ta vue telle quelle : on expose un array $user comme avant
         $user = [
             'id' => $user->id(),
             'pseudo' => $user->pseudo(),

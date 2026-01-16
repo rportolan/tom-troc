@@ -42,7 +42,7 @@ require_once __DIR__ . '/../src/controllers/AuthController.php';
 require_once __DIR__ . '/../src/controllers/AccountController.php';
 require_once __DIR__ . '/../src/controllers/ProfileController.php';
 
-// DI simple
+// DI
 $usersRepo = new UserRepository($pdo);
 $booksRepo = new BookRepository($pdo);
 $conversationsRepo = new ConversationRepository($pdo);

@@ -40,9 +40,6 @@
 
   <div class="hint">jpg / png / webp (2 Mo max). Laisse vide pour garder l'image.</div>
 </div>
-
-
-        <!-- Droite : champs -->
         <div class="bookedit-fields">
           <div class="field">
             <label>Titre</label>

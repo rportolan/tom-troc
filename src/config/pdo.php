@@ -1,6 +1,5 @@
 <?php
 
-// Charge config DB
 $config = require __DIR__ . '/database.php';
 
 $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['name']};charset={$config['charset']}";

@@ -130,7 +130,6 @@ final class BookController
             header('Location: /?page=books&error=Livre introuvable'); exit;
         }
 
-        // On garde EXACTEMENT la structure attendue par la vue
         $book = [
             'id' => (int)$row['id'],
             'title' => $row['title'],
