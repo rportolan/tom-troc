@@ -3,10 +3,6 @@
 .env.*
 !.env.example
 
-# --- Docker / volumes / DB ---
-db_data/
-mysql-data/
-
 # --- OS / IDE ---
 .DS_Store
 Thumbs.db

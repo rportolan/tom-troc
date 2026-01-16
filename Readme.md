@@ -19,4 +19,7 @@
   - Password : root
 
 ## Notes
-- Les images uploadées (public/images/books) ne sont pas versionnées sur GitHub.
+- Compte test
+   - username // email // password
+   - test1 // test1@gmail.com // 123456
+   - test2 // test2@gmail.com // 123456
